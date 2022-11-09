@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity"
+    android:orientation="vertical"
+    android:gravity="center">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="30dp"
+        android:text="KHABAR"
+        android:textStyle="bold"
+        android:textColor="@color/black"
+        android:textSize="40sp" />
+
+    <EditText
+        android:id="@+id/emailVal"
+        android:layout_width="220dp"
+        android:layout_height="44dp"
+        android:hint="email"
+        android:inputType="textEmailAddress"
+        android:imeOptions="actionDone"/>
+
+    <EditText
+        android:id="@+id/passVal"
+        android:layout_width="220dp"
+        android:layout_height="44dp"
+        android:hint="password"
+        android:inputType="textPassword"
+        android:imeOptions="actionDone"/>
+
+    <CheckBox
+        android:id="@+id/showPass"
+        android:layout_marginTop="8dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Show Password"
+        android:onClick="showPassword"/>
+
+    <Button
+        android:id="@+id/btLogin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="LOGIN"
+        android:layout_marginTop="20dp"
+        android:paddingHorizontal="28dp"/>
+
+    <Button
+        android:id="@+id/btSignup"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingHorizontal="24dp"
+        android:text="SINGUP" />
+
+</LinearLayout>
