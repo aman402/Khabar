@@ -4,10 +4,16 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.method.HideReturnsTransformationMethod
 import android.text.method.PasswordTransformationMethod
-import android.view.View
 import android.widget.Button
 import android.widget.CheckBox
 import android.widget.EditText
+import android.widget.Toast
+import com.google.firebase.auth.FirebaseAuth
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
+import kotlinx.coroutines.withContext
 
 class MainActivity : AppCompatActivity() {
 
@@ -16,6 +22,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var emailVal: EditText
     private lateinit var passVal: EditText
     private lateinit var showPass: CheckBox
+
+    private lateinit var auth: FirebaseAuth
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -26,12 +34,69 @@ class MainActivity : AppCompatActivity() {
         emailVal = findViewById(R.id.emailVal)
         passVal = findViewById(R.id.passVal)
         showPass = findViewById(R.id.showPass)
+
+        auth = FirebaseAuth.getInstance()
+        auth.signOut() // because android app saves the state of auth when we close the app so
+                       // we will first sign out when we open the app
+
+        showPass.setOnClickListener {
+            if(showPass.isChecked) passVal.transformationMethod = HideReturnsTransformationMethod.getInstance()
+            else passVal.transformationMethod = PasswordTransformationMethod.getInstance()
+            passVal.setSelection(passVal.length());
+        }
+
+        btSignup.setOnClickListener {
+            registerUser()
+        }
+        btLogin.setOnClickListener{
+            loginUser()
+        }
     }
 
-    fun showPassword(v: View)
-    {
-        if(showPass.isChecked) passVal.transformationMethod = HideReturnsTransformationMethod.getInstance()
-        else passVal.transformationMethod = PasswordTransformationMethod.getInstance()
-        passVal.setSelection(passVal.length());
+    private fun registerUser() {
+        val email = emailVal.text.toString()
+        val pass = passVal.text.toString()
+        if(email.isNotEmpty() && pass.isNotEmpty()) {
+            CoroutineScope(Dispatchers.IO).launch {
+                try {
+                    auth.createUserWithEmailAndPassword(email, pass).await()
+                    if(checkLoggedInState()) {
+                        withContext(Dispatchers.Main){
+                            Toast.makeText(this@MainActivity, "Successfully Registered", Toast.LENGTH_LONG).show()
+                        }
+                        auth.signOut()
+                    }
+                } catch(e: Exception) {
+                    withContext(Dispatchers.Main) {
+                        Toast.makeText(this@MainActivity, e.message, Toast.LENGTH_LONG).show()
+                    }
+                }
+            }
+        }
+    }
+
+    private fun loginUser() {
+        val email = emailVal.text.toString()
+        val pass = passVal.text.toString()
+        if(email.isNotEmpty() && pass.isNotEmpty()) {
+            CoroutineScope(Dispatchers.IO).launch {
+                try {
+                    auth.signInWithEmailAndPassword(email, pass).await()
+                    if(checkLoggedInState()) {
+                        withContext(Dispatchers.Main){
+                            Toast.makeText(this@MainActivity, "Successfully Logged In", Toast.LENGTH_LONG).show()
+                        }
+                    }
+                } catch(e: Exception) {
+                    withContext(Dispatchers.Main) {
+                        Toast.makeText(this@MainActivity, e.message, Toast.LENGTH_LONG).show()
+                    }
+                }
+            }
+        }
+    }
+
+    private fun checkLoggedInState(): Boolean {
+        return (auth.currentUser != null)
     }
 }

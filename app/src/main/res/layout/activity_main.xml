@@ -37,8 +37,7 @@
         android:layout_marginTop="8dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Show Password"
-        android:onClick="showPassword"/>
+        android:text="Show Password"/>
 
     <Button
         android:id="@+id/btLogin"
@@ -53,6 +52,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:paddingHorizontal="24dp"
-        android:text="SINGUP" />
+        android:text="SIGNUP" />
 
 </LinearLayout>
