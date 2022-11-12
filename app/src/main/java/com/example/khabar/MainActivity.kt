@@ -1,5 +1,6 @@
 package com.example.khabar
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.method.HideReturnsTransformationMethod
@@ -14,8 +15,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
-
-//check
 
 class MainActivity : AppCompatActivity() {
 
@@ -44,7 +43,7 @@ class MainActivity : AppCompatActivity() {
         showPass.setOnClickListener {
             if(showPass.isChecked) passVal.transformationMethod = HideReturnsTransformationMethod.getInstance()
             else passVal.transformationMethod = PasswordTransformationMethod.getInstance()
-            passVal.setSelection(passVal.length());
+            passVal.setSelection(passVal.length())
         }
 
         btSignup.setOnClickListener {
@@ -64,13 +63,13 @@ class MainActivity : AppCompatActivity() {
                     auth.createUserWithEmailAndPassword(email, pass).await()
                     if(checkLoggedInState()) {
                         withContext(Dispatchers.Main){
-                            Toast.makeText(this@MainActivity, "Successfully Registered", Toast.LENGTH_LONG).show()
+                            Toast.makeText(this@MainActivity, "Successfully Registered", Toast.LENGTH_SHORT).show()
                         }
                         auth.signOut()
                     }
                 } catch(e: Exception) {
                     withContext(Dispatchers.Main) {
-                        Toast.makeText(this@MainActivity, e.message, Toast.LENGTH_LONG).show()
+                        Toast.makeText(this@MainActivity, e.message, Toast.LENGTH_SHORT).show()
                     }
                 }
             }
@@ -86,12 +85,14 @@ class MainActivity : AppCompatActivity() {
                     auth.signInWithEmailAndPassword(email, pass).await()
                     if(checkLoggedInState()) {
                         withContext(Dispatchers.Main){
-                            Toast.makeText(this@MainActivity, "Successfully Logged In", Toast.LENGTH_LONG).show()
+                            Toast.makeText(this@MainActivity, "Successfully Logged In", Toast.LENGTH_SHORT).show()
+                            val myIntent = Intent(this@MainActivity, Home::class.java)
+                            startActivity(myIntent)
                         }
                     }
                 } catch(e: Exception) {
                     withContext(Dispatchers.Main) {
-                        Toast.makeText(this@MainActivity, e.message, Toast.LENGTH_LONG).show()
+                        Toast.makeText(this@MainActivity, e.message, Toast.LENGTH_SHORT).show()
                     }
                 }
             }
@@ -100,5 +101,10 @@ class MainActivity : AppCompatActivity() {
 
     private fun checkLoggedInState(): Boolean {
         return (auth.currentUser != null)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        // Toast.makeText(this@MainActivity, "Activity resumed", Toast.LENGTH_LONG).show()
     }
 }
