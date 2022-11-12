@@ -37,7 +37,7 @@ class MainActivity : AppCompatActivity() {
 
         auth = FirebaseAuth.getInstance()
         auth.signOut() // because android app saves the state of auth when we close the app so
-                       // we will first sign out when we open the app
+                       // we will first sign out when we open the MainActivity
 
         showPass.setOnClickListener {
             if(showPass.isChecked) passVal.transformationMethod = HideReturnsTransformationMethod.getInstance()
